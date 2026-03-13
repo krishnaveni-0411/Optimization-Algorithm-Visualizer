@@ -166,7 +166,7 @@ with tab_play:
             dominated_df = df[~mask].copy()
 
         # message directly under the button
-        status_placeholder.success("✅ Pareto front computed for current settings.")
+        status_placeholder.success("✅ Pareto front computed for current settings. Check the playground")
 
         st.subheader("Results")
 
