@@ -13,7 +13,7 @@ st.caption("Interactive lab for understanding optimization algorithms with real�
 
 st.markdown(
     """
-<b>Created by:</b> <span style="font-size:16px; font-weight:600;">Krishnaveni O_o 2310040013</span>  
+<b>Created by:</b> <span style="font-size:16px; font-weight:600;">Krishnaveni 2310040013 O_o </span>  
 <i>“Turning optimization theory into playable experiments.”</i>
 """,
     unsafe_allow_html=True,
@@ -111,4 +111,4 @@ with tab_how:
     )
 
     st.markdown("---")
-    st.caption("Tip: This app was built as a course mini‑project by Your Name (ECE).")
+    st.caption("Tip: This app was built as a course mini‑project by Krishnaveni <3.")
