@@ -1,57 +1,72 @@
-"""
-Home — Optimization Algorithm Visualizer
-"""
-
+# Home.py
 import streamlit as st
 
-st.set_page_config(page_title="Optimization Visualizer", layout="wide", page_icon="🔍")
+st.set_page_config(
+    page_title="Optimization Playground",
+    layout="wide",
+    page_icon="🧪",
+)
 
-st.title("Optimization Algorithm Visualizer")
-st.markdown("Interactive demonstrations of four optimization algorithms.")
-st.markdown("---")
+st.title("🧪 Optimization Playground")
+st.caption("Interactive lab for understanding optimization algorithms with real‑life stories.")
 
-col1, col2 = st.columns(2)
+tab_overview, tab_algos, tab_how = st.tabs(["Overview", "Algorithms", "How to use"])
 
-with col1:
-    st.subheader("1 — Unconstrained Minimization")
-    st.markdown("""
-    Compare three gradient-based methods on any 2D function:
-    - **Steepest Descent (SD)**
-    - **Newton's Method**
-    - **Conjugate Gradient (CG)**
-
-    Watch their trajectories on a contour plot and compare convergence speed.
-    """)
-    st.page_link("pages/1_Unconstrained_Minimization.py", label="Open →", icon="📈")
-
+with tab_overview:
+    st.subheader("Why this playground?")
+    st.info(
+        "Instead of focusing on formulas, this app focuses on **intuition**.\n"
+        "Each page starts with a real‑life scenario, then lets you play with parameters."
+    )
     st.markdown("---")
+    st.subheader("What you can explore")
+    st.markdown(
+        "- Gradient‑based search on a 3D surface\n"
+        "- Trade‑offs between conflicting project goals\n"
+        "- Nature‑inspired search using genetic algorithms\n"
+        "- Escaping local minima with simulated annealing"
+    )
 
-    st.subheader("3 — Genetic Algorithm")
-    st.markdown("""
-    Solve the **0/1 Knapsack problem** with a GA:
-    - Adjust population size, mutation rate, crossover rate
-    - Watch the population evolve over generations
-    - See diversity, convergence, and the best packing solution
-    """)
-    st.page_link("pages/3_Genetic_Algorithm.py", label="Open →", icon="🧬")
+with tab_algos:
+    c1, c2 = st.columns(2)
 
-with col2:
-    st.subheader("2 — Pareto Front")
-    st.markdown("""
-    Explore **multi-objective optimization** trade-offs:
-    - Upload your own CSV or use the built-in smartphone dataset
-    - Choose any two objectives and their directions
-    - Visualize which solutions are Pareto optimal
-    """)
-    st.page_link("pages/2_Pareto_Front.py", label="Open →", icon="📊")
+    with c1:
+        st.markdown("### ⚙️ Surface Minimization")
+        st.write(
+            "Design a system by minimizing a loss surface with Steepest Descent, "
+            "Newton, and Conjugate Gradient."
+        )
+        st.page_link("pages/1_Unconstrained_Minimization.py",
+                     label="Open surface minimization →", icon="📉")
 
-    st.markdown("---")
+        st.markdown("### 🧬 Genetic Scheduling")
+        st.write(
+            "Use a Genetic Algorithm to build an efficient packing/scheduling plan."
+        )
+        st.page_link("pages/3_Genetic_Algorithm.py",
+                     label="Open GA playground →", icon="🧬")
 
-    st.subheader("4 — Simulated Annealing")
-    st.markdown("""
-    Schedule **10 exams into time slots** with SA:
-    - Adjust cooling rate, initial temperature, iterations
-    - Watch clashes reduce to zero
-    - Compare fast vs slow cooling schedules
-    """)
-    st.page_link("pages/4_Simulated_Annealing.py", label="Open →", icon="🌡️")
+    with c2:
+        st.markdown("### ⚖️ Project Trade‑offs")
+        st.write(
+            "Compare engineering project ideas based on **cost, impact, and risk** "
+            "using Pareto fronts."
+        )
+        st.page_link("pages/2_Pareto_Front.py",
+                     label="Open trade‑off explorer →", icon="📊")
+
+        st.markdown("### 🌡️ Cooling‑based Search")
+        st.write(
+            "See how simulated annealing schedules tasks by gradually reducing randomness."
+        )
+        st.page_link("pages/4_Simulated_Annealing.py",
+                     label="Open SA explorer →", icon="🌡️")
+
+with tab_how:
+    st.subheader("How to use this app in class")
+    st.markdown(
+        "1. Start with **Project Trade‑offs** to understand Pareto fronts.\n"
+        "2. Then explore **Surface Minimization** to see gradient‑based methods.\n"
+        "3. Use **GA** and **SA** to compare stochastic search strategies.\n"
+        "4. Take screenshots and note your observations for your report."
+    )
