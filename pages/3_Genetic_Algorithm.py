@@ -157,6 +157,7 @@ with tab_play:
                 tournament_k,
                 int(seed),
             )
+        st.success("✅ GA run finished for current parameters. Check the playground")
 
         total_h = sum(hours[i] for i in range(len(best_chrom)) if best_chrom[i])
         valid = total_h <= max_hours

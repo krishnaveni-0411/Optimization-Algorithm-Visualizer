@@ -160,7 +160,7 @@ with tab_play:
                 "Newton": run_newton(f, grad, hess, start, tol, max_iter),
                 "Conjugate Gradient": run_cg(f, grad, start, tol, max_iter),
             }
-
+        st.success("✅ Optimization completed with current settings. Check the playground")
         st.subheader("Result summary")
         cols = st.columns(3)
         colors = {

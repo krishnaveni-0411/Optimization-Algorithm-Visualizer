@@ -174,6 +174,8 @@ with tab_play:
             ) = run_sa(
                 num_slots, init_temp, cooling_rate, min_temp, max_iter, int(seed)
             )
+        st.success("✅ Timetable generated with current SA settings.")
+
 
         c1, c2, c3, c4 = st.columns(4)
         c1.metric("Final clashes", str(best_c))
