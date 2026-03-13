@@ -176,19 +176,6 @@ with tab_play:
 
             fig, ax = plt.subplots(figsize=(10, 6))
 
-            # Optional color dimension
-            if color_by != "(none)":
-                cmap = plt.get_cmap("viridis")
-                norm_vals = np.array(df[color_by].values, dtype=float)
-                vmin = float(np.nanmin(norm_vals))
-                vmax = float(np.nanmax(norm_vals))
-                denom = (vmax - vmin) if vmax > vmin else 1.0
-                norm = (norm_vals - vmin) / denom
-                colors_all = cmap(norm)
-            else:
-                colors_all = ["lightgrey"] * len(df)
-
-
             # Plot dominated
             ax.scatter(
                 dominated_df[obj1_col],
