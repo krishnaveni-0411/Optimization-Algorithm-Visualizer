@@ -9,6 +9,16 @@ st.set_page_config(page_title="Project Trade‑off Explorer", layout="wide")
 
 st.title("⚖️ Project Trade‑off Explorer (Pareto Front)")
 st.caption("Choose engineering projects based on cost, impact, and risk.")
+import random
+
+fun_quotes = [
+    "Perfect project does not exist, only trade‑offs. 🙂",
+    "Low cost, high impact, low risk? Pick any two…",
+    "If everything is optimal, nothing is.",
+]
+
+st.info(f"Project of the day mood: {random.choice(fun_quotes)}")
+
 
 # ---------- Scenario & theory tab ----------
 tab_scenario, tab_play, tab_notes = st.tabs(
