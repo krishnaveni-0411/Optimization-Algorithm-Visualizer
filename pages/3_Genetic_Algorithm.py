@@ -67,7 +67,7 @@ with tab_play:
         st.markdown("---")
         show_chrom = st.checkbox("Show best chromosome heatmap", value=True)
         run_btn = st.button("Run Genetic Algorithm", type="primary", use_container_width=True)
-
+        status_placeholder = st.empty()
     # ---------- GA core ----------
     def fitness(chrom, hours, values, max_h):
         total_h = sum(hours[i] for i in range(len(chrom)) if chrom[i])
@@ -157,7 +157,7 @@ with tab_play:
                 tournament_k,
                 int(seed),
             )
-        st.success("✅ GA run finished for current parameters. Check the playground")
+        status_placeholder.success("✅ GA run finished for current parameters. Check the playground")
 
         total_h = sum(hours[i] for i in range(len(best_chrom)) if best_chrom[i])
         valid = total_h <= max_hours

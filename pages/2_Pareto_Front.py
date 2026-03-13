@@ -143,131 +143,132 @@ with tab_play:
             ["(none)"] + numeric_cols,
         )
 
+        st.markdown("---")
+        run_btn = st.button("Compute Pareto front", type="primary", use_container_width=True)
+        status_placeholder = st.empty()
+
     st.markdown("---")
 
-    # ---------- Always compute with current settings ----------
-    with st.spinner("Computing Pareto front..."):
-        v1 = df[obj1_col].values.astype(float)
-        v2 = df[obj2_col].values.astype(float)
+    if run_btn:
+        with st.spinner("Computing Pareto front..."):
+            v1 = df[obj1_col].values.astype(float)
+            v2 = df[obj2_col].values.astype(float)
 
-        # convert to "minimize" space
-        c1 = v1 if obj1_dir == "Minimize" else -v1
-        c2 = v2 if obj2_dir == "Minimize" else -v2
-        costs = np.column_stack([c1, c2])
+            # convert to "minimize" space
+            c1 = v1 if obj1_dir == "Minimize" else -v1
+            c2 = v2 if obj2_dir == "Minimize" else -v2
+            costs = np.column_stack([c1, c2])
 
-        mask = find_pareto(costs)
-        df["Pareto"] = mask
+            mask = find_pareto(costs)
+            df["Pareto"] = mask
 
-        pareto_df = df[mask].copy()
-        dominated_df = df[~mask].copy()
+            pareto_df = df[mask].copy()
+            dominated_df = df[~mask].copy()
 
-    st.success("✅ Pareto front computed with current settings. Check the playground")
-    st.subheader("Results")
+        # message directly under the button
+        status_placeholder.success("✅ Pareto front computed for current settings.")
 
-    # Top metrics
-    c1m, c2m, c3m = st.columns(3)
-    c1m.metric("Total projects", len(df))
-    c2m.metric("Pareto‑optimal projects", int(mask.sum()))
-    c3m.metric("Dominated projects", int((~mask).sum()))
+        st.subheader("Results")
 
-    # Two sub‑tabs for visuals
-    t_scatter, t_table = st.tabs(["Scatter plot", "Pareto table"])
+        # Top metrics
+        c1m, c2m, c3m = st.columns(3)
+        c1m.metric("Total projects", len(df))
+        c2m.metric("Pareto‑optimal projects", int(mask.sum()))
+        c3m.metric("Dominated projects", int((~mask).sum()))
 
-    with t_scatter:
-        st.subheader("Pareto front visualization")
+        # Two sub‑tabs for visuals
+        t_scatter, t_table = st.tabs(["Scatter plot", "Pareto table"])
 
-        fig, ax = plt.subplots(figsize=(10, 6))
+        with t_scatter:
+            st.subheader("Pareto front visualization")
 
-        # Colors based on selected column
-        if color_by != "(none)":
-            cmap = plt.get_cmap("viridis")
-            norm_vals = np.array(df[color_by].values, dtype=float)
-            vmin = float(np.nanmin(norm_vals))
-            vmax = float(np.nanmax(norm_vals))
-            denom = (vmax - vmin) if vmax > vmin else 1.0
-            norm = (norm_vals - vmin) / denom
-            colors_all = cmap(norm)
-        else:
-            colors_all = ["lightgrey"] * len(df)
+            fig, ax = plt.subplots(figsize=(10, 6))
 
-        # scatter all points colored by selected column
-        ax.scatter(
-            df[obj1_col],
-            df[obj2_col],
-            c=colors_all,
-            edgecolors="grey",
-            s=70,
-            alpha=0.8,
-            label="All projects",
-            zorder=1,
-        )
+            # Colors based on selected column
+            if color_by != "(none)":
+                cmap = plt.get_cmap("viridis")
+                norm_vals = np.array(df[color_by].values, dtype=float)
+                vmin = float(np.nanmin(norm_vals))
+                vmax = float(np.nanmax(norm_vals))
+                denom = (vmax - vmin) if vmax > vmin else 1.0
+                norm = (norm_vals - vmin) / denom
+                colors_all = cmap(norm)
+            else:
+                colors_all = ["lightgrey"] * len(df)
 
-        # highlight Pareto points with red outline
-        ax.scatter(
-            pareto_df[obj1_col],
-            pareto_df[obj2_col],
-            facecolors="none",
-            edgecolors="red",
-            linewidths=1.8,
-            s=140,
-            label="Pareto‑optimal",
-            zorder=3,
-        )
+            # scatter all points colored by selected column
+            ax.scatter(
+                df[obj1_col],
+                df[obj2_col],
+                c=colors_all,
+                edgecolors="grey",
+                s=70,
+                alpha=0.8,
+                label="All projects",
+                zorder=1,
+            )
 
-        # Draw front line (sorted by x)
-        pf_sorted = pareto_df.sort_values(by=obj1_col)
-        ax.plot(
-            pf_sorted[obj1_col],
-            pf_sorted[obj2_col],
-            "r--",
-            linewidth=1.5,
-            alpha=0.7,
-            zorder=2,
-        )
+            # highlight Pareto points with red outline
+            ax.scatter(
+                pareto_df[obj1_col],
+                pareto_df[obj2_col],
+                facecolors="none",
+                edgecolors="red",
+                linewidths=1.8,
+                s=140,
+                label="Pareto‑optimal",
+                zorder=3,
+            )
 
-        # Labels on Pareto points
-        if label_col != "(none)":
-            for _, row in pareto_df.iterrows():
-                ax.annotate(
-                    str(row[label_col]),
-                    (row[obj1_col], row[obj2_col]),
-                    xytext=(5, 4),
-                    textcoords="offset points",
-                    fontsize=8,
-                    color="black",
-                )
+            # Draw front line (sorted by x)
+            pf_sorted = pareto_df.sort_values(by=obj1_col)
+            ax.plot(
+                pf_sorted[obj1_col],
+                pf_sorted[obj2_col],
+                "r--",
+                linewidth=1.5,
+                alpha=0.7,
+                zorder=2,
+            )
 
-        ax.set_xlabel(f"{obj1_col} [{obj1_dir}]", fontsize=11)
-        ax.set_ylabel(f"{obj2_col} [{obj2_dir}]", fontsize=11)
-        ax.set_title("Project trade‑offs Pareto front", fontsize=13)
-        ax.grid(True, linestyle=":", alpha=0.4)
-        ax.legend()
+            # Labels on Pareto points
+            if label_col != "(none)":
+                for _, row in pareto_df.iterrows():
+                    ax.annotate(
+                        str(row[label_col]),
+                        (row[obj1_col], row[obj2_col]),
+                        xytext=(5, 4),
+                        textcoords="offset points",
+                        fontsize=8,
+                        color="black",
+                    )
 
-        st.pyplot(fig, use_container_width=True)
-        plt.close()
+            ax.set_xlabel(f"{obj1_col} [{obj1_dir}]", fontsize=11)
+            ax.set_ylabel(f"{obj2_col} [{obj2_dir}]", fontsize=11)
+            ax.set_title("Project trade‑offs Pareto front", fontsize=13)
+            ax.grid(True, linestyle=":", alpha=0.4)
+            ax.legend()
 
-    with t_table:
-        st.subheader("Pareto‑optimal project list")
-        show_cols = (
-            ([label_col] if label_col != "(none)" else []) + [obj1_col, obj2_col]
-        )
-        st.dataframe(
-            pareto_df[show_cols].reset_index(drop=True),
-            use_container_width=True,
-        )
+            st.pyplot(fig, use_container_width=True)
+            plt.close()
 
-        buf = io.StringIO()
-        pareto_df.to_csv(buf, index=False)
-        st.download_button(
-            "Download Pareto‑optimal projects as CSV",
-            data=buf.getvalue(),
-            file_name="pareto_projects.csv",
-            mime="text/csv",
-        )
-with tab_notes:
-    st.subheader("Questions to explore")
-    st.markdown(
-        "- What changes when you **swap** X and Y objectives?\n"
-        "- If you treat **risk as minimize** vs **maximize**, how does the front move?\n"
-        "- Which projects would you pick if budget is very strict vs flexible?"
-    )
+        with t_table:
+            st.subheader("Pareto‑optimal project list")
+            show_cols = (
+                ([label_col] if label_col != "(none)" else []) + [obj1_col, obj2_col]
+            )
+            st.dataframe(
+                pareto_df[show_cols].reset_index(drop=True),
+                use_container_width=True,
+            )
+
+            buf = io.StringIO()
+            pareto_df.to_csv(buf, index=False)
+            st.download_button(
+                "Download Pareto‑optimal projects as CSV",
+                data=buf.getvalue(),
+                file_name="pareto_projects.csv",
+                mime="text/csv",
+            )
+    else:
+        st.info("Set objectives in the sidebar and click **Compute Pareto front**.")

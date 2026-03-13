@@ -59,6 +59,8 @@ with tab_play:
         )
 
         run_btn = st.button("Run optimizers", type="primary", use_container_width=True)
+        status_placeholder = st.empty()
+
 
     st.markdown("---")
 
@@ -160,7 +162,7 @@ with tab_play:
                 "Newton": run_newton(f, grad, hess, start, tol, max_iter),
                 "Conjugate Gradient": run_cg(f, grad, start, tol, max_iter),
             }
-        st.success("✅ Optimization completed with current settings. Check the playground")
+        status_placeholder.success("✅ Optimization completed with current settings. Check the playground")
         st.subheader("Result summary")
         cols = st.columns(3)
         colors = {

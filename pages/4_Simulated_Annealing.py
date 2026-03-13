@@ -103,7 +103,7 @@ with tab_play:
         show_initial = st.checkbox("Show initial random timetable", value=True)
 
         run_btn = st.button("Run Simulated Annealing", type="primary", use_container_width=True)
-
+        status_placeholder = st.empty()
     # ---------- SA core ----------
     def count_clashes(tt, n_slots):
         clashes = 0
@@ -174,7 +174,7 @@ with tab_play:
             ) = run_sa(
                 num_slots, init_temp, cooling_rate, min_temp, max_iter, int(seed)
             )
-        st.success("✅ Timetable generated with current SA settings.")
+        status_placeholder.success("✅ Timetable generated with current SA settings.")
 
 
         c1, c2, c3, c4 = st.columns(4)
